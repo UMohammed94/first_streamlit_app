@@ -1,28 +1,57 @@
 import streamlit as st
+import pandas as pd
+import matplotlib.pyplot as plt
+from pathlib import Path
 
-# App Title
-st.title("Simple BMI Calculator")
+# File to save user data
+data_file = Path("user_bmi_data.csv")
 
-# Input Fields
-st.header("Enter Your Details")
-weight = st.number_input("Weight (in kg)", min_value=0.0, step=0.1)
-height = st.number_input("Height (in meters)", min_value=0.0, step=0.01)
-
-# Calculate BMI
-if height > 0:
-    bmi = weight / (height ** 2)
-    st.subheader("Your BMI:")
-    st.write(f"{bmi:.2f}")
-
-    # Display BMI Category
-    st.subheader("BMI Category:")
-    if bmi < 18.5:
-        st.write("Underweight")
-    elif 18.5 <= bmi < 24.9:
-        st.write("Normal weight")
-    elif 25 <= bmi < 29.9:
-        st.write("Overweight")
+# Function to load or create the data file
+def load_data():
+    if data_file.exists():
+        return pd.read_csv(data_file)
     else:
-        st.write("Obesity")
+        return pd.DataFrame(columns=["Weight", "Height", "BMI"])
+
+# Function to save new entry to the data file
+def save_data(weight, height, bmi):
+    data = load_data()
+    new_entry = {"Weight": weight, "Height": height, "BMI": bmi}
+    data = pd.concat([data, pd.DataFrame([new_entry])], ignore_index=True)
+    data.to_csv(data_file, index=False)
+
+# Main app
+st.title("BMI Calculator with Data Saving 📊")
+
+# User inputs
+weight = st.number_input("Enter your weight (in kg)", min_value=0.0, step=0.1)
+height = st.number_input("Enter your height (in meters)", min_value=0.0, step=0.01)
+
+if weight > 0 and height > 0:
+    bmi = weight / (height ** 2)
+    st.success(f"Your BMI is: {bmi:.2f}")
+    
+    # Save the data
+    if st.button("Save Data"):
+        save_data(weight, height, bmi)
+        st.success("Your data has been saved!")
+
+# Display historical data
+st.header("Historical Data")
+data = load_data()
+
+if not data.empty:
+    st.dataframe(data)
+
+    # Plot data
+    st.header("Visualize Your Progress")
+    fig, ax = plt.subplots()
+    ax.plot(data["BMI"], label="BMI", marker="o", linestyle="--", color="blue")
+    ax.set_xlabel("Entry Number")
+    ax.set_ylabel("BMI")
+    ax.set_title("BMI Progress Over Time")
+    ax.legend()
+    st.pyplot(fig)
 else:
-    st.write("Please enter a valid height.")
+    st.info("No data available. Save your first entry!")
+
