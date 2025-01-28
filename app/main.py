@@ -20,8 +20,27 @@ def save_data(weight, height, bmi):
     data = pd.concat([data, pd.DataFrame([new_entry])], ignore_index=True)
     data.to_csv(data_file, index=False)
 
+# Add a blue banner at the top
+st.markdown(
+    """
+    <style>
+    .blue-banner {
+        background-color: #007BFF;
+        color: white;
+        padding: 10px;
+        font-size: 20px;
+        text-align: center;
+        border-radius: 5px;
+        margin-bottom: 20px;
+    }
+    </style>
+    <div class="blue-banner">BMI Calculator and Tracker 📊</div>
+    """,
+    unsafe_allow_html=True
+)
+
 # Main app
-st.title("BMI Calculator with Data Saving 📊")
+st.title("BMI Calculator")
 
 # User inputs
 weight = st.number_input("Enter your weight (in kg)", min_value=0.0, step=0.1)
@@ -54,4 +73,3 @@ if not data.empty:
     st.pyplot(fig)
 else:
     st.info("No data available. Save your first entry!")
-
