@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import matplotlib.pyplot as plt
 from pathlib import Path
-
+# todo clean up the files 
 # File to save user data
 data_file = Path("user_bmi_data.csv")
 
