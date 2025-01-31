@@ -17,3 +17,5 @@ def create_directories(dirs: list) -> None:
     print(f"all required dirs exist.")
 
 create_directories(required_dirs)
+
+print(required_dirs)
