@@ -72,4 +72,4 @@ if not data.empty:
     ax.legend()
     st.pyplot(fig)
 else:
-    st.info("No data available. Save and enter your first entry!")
+    st.info("No data available. Save and enter your first entry  !")
